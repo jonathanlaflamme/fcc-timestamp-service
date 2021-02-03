@@ -8,6 +8,7 @@ var app = express();
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC
 var cors = require('cors');
+const { json } = require('express');
 app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 204
 
 // http://expressjs.com/en/starter/static-files.html
@@ -34,6 +35,10 @@ app.get('/api/timestamp/:date?', (req, res) => {
     date = new Date(dateParam);
   } else {
     date = new Date(parseInt(dateParam));
+  }
+
+  if(date.getTime() < 0) {
+    return res.json({ error : "Invalid Date" });
   }
 
   return res.json({ unix: date.getTime(), utc: date.toUTCString() });
